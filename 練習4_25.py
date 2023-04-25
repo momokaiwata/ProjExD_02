@@ -77,6 +77,9 @@ def main():
         screen.blit(bb_img, bb_rect) #表示
         # screen.blit(bb_img, [x, y])  #bb_img(赤い円)をぶりっと
 
+        if kk_rect.colliderect(bb_rect):
+            return
+
         pg.display.update()
         clock.tick(1000)
 
