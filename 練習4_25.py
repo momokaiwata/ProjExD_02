@@ -12,6 +12,22 @@ delta = {
         }
 
 
+def check_bound(scr_rect : pg.Rect, obj_rect : pg.Rect) -> tuple[bool, bool]:
+    """
+    オブジェクトが画面内 or 画面外を判定し、真理値タプルを返す関数
+    引数1 : 画面SurfaceのRect
+    引数1 : こうかとん　または　爆弾SurfaceのRect
+    戻り値 : 横方向　縦方向のはみ出し判定結果 (画面内：True/画面外：False)
+    """
+    yoko, tate = True, True
+    if obj_rect.left < scr_rect.left or scr_rect.right < obj_rect.right:
+        yoko = False
+    if obj_rect.top < scr_rect.top or scr_rect.bottom < obj_rect.bottom:
+        tate = False
+    return yoko, tate 
+
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((1600, 900))
@@ -44,9 +60,20 @@ def main():
             if key_list[k]:
                 kk_rect.move_ip((mv))
 
+        if check_bound(screen.get_rect(), kk_rect) != (True, True):
+            for k, mv in delta.items(): # mv = 移動量
+                if key_list[k]:
+                    kk_rect.move_ip(-mv[0], -mv[1])
+
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, kk_rect)
         bb_rect.move_ip(vx, vy) #移動部分
+        yoko, tate = check_bound(screen.get_rect(), bb_rect)
+        if not yoko:
+            vx *= -1
+        if not tate:
+            vy *= -1
+
         screen.blit(bb_img, bb_rect) #表示
         # screen.blit(bb_img, [x, y])  #bb_img(赤い円)をぶりっと
 
