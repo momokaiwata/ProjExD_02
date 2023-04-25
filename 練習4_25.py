@@ -4,6 +4,14 @@ import sys
 import pygame as pg
 
 
+delta = {
+        pg.K_UP: (0, -1), # 移動量の値であり、(横,縦)
+        pg.K_DOWN: (0, +1),
+        pg.K_LEFT: (-1, 0),
+        pg.K_RIGHT: (+1, 0),
+        }
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((1600, 900))
@@ -22,7 +30,6 @@ def main():
     vx, vy = +1, +1 #横、縦速度
     bb_rect = bb_img.get_rect() # ?? 
     bb_rect.center = x, y # 爆弾の中心座標に x, y を ?
-
     tmr = 0
 
     while True:
@@ -31,6 +38,12 @@ def main():
                 return 0
 
         tmr += 1
+
+        key_list = pg.key.get_pressed()
+        for k, mv in delta.items(): # mv = 移動量
+            if key_list[k]:
+                kk_rect.move_ip((mv))
+
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, kk_rect)
         bb_rect.move_ip(vx, vy) #移動部分
